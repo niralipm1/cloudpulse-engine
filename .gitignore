@@ -1,0 +1,10 @@
+bin/
+dist/
+cloudpulse-engine
+*.exe
+*.test
+*.prof
+.DS_Store
+*.log
+.idea/
+.vscode/

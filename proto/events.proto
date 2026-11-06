@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package cloudpulse.v1;
+
+option go_package = "github.com/niralipm1/cloudpulse-engine/proto;cloudpulsev1";
+
+service TelemetryService {
+  rpc IngestEvent (TelemetryEvent) returns (IngestResponse);
+  rpc StreamEvents (stream TelemetryEvent) returns (StreamSummary);
+  rpc SubscribeAlerts (AlertSubscriptionRequest) returns (stream AlertNotification);
+}
+
+message TelemetryEvent {
+  string event_id = 1;
+  string source_client_id = 2;
+  string event_type = 3;
+  int64 timestamp_epoch_ms = 4;
+  map<string, string> attributes = 5;
+  double metric_value = 6;
+}
+
+message IngestResponse {
+  bool success = 1;
+  string event_id = 2;
+  int64 ingested_at_epoch_ms = 3;
+}
+
+message StreamSummary {
+  int64 total_events_received = 1;
+  int64 total_bytes_ingested = 2;
+  double duration_seconds = 3;
+  int32 dropped_events = 4;
+}
+
+message AlertSubscriptionRequest {
+  string client_id = 1;
+  repeated string event_types = 2;
+  double threshold_limit = 3;
+}
+
+message AlertNotification {
+  string alert_id = 1;
+  string severity = 2;
+  string message = 3;
+  int64 triggered_at = 4;
+}
